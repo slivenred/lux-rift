@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Lux Rift</title>
+  <desc id="desc">A luminous fracture opening through a dark elastic surface.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c1113"/>
+      <stop offset="0.55" stop-color="#171c1d"/>
+      <stop offset="1" stop-color="#080b0c"/>
+    </linearGradient>
+    <linearGradient id="rift" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff7df"/>
+      <stop offset="0.48" stop-color="#ffd3a3"/>
+      <stop offset="1" stop-color="#f09a6a"/>
+    </linearGradient>
+    <radialGradient id="spill" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffd7a9" stop-opacity="0.42"/>
+      <stop offset="0.55" stop-color="#f6ad79" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#f6ad79" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="42"/>
+    </filter>
+    <pattern id="grid" width="62" height="62" patternUnits="userSpaceOnUse">
+      <path d="M62 0H0V62" fill="none" stroke="#dce3de" stroke-opacity="0.045"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <ellipse cx="610" cy="328" rx="460" ry="250" fill="url(#spill)" filter="url(#soft)"/>
+  <g transform="rotate(-14 600 315)">
+    <path d="M165 333 C245 270 322 369 401 304 C487 233 550 348 635 286 C731 216 786 331 878 275 C946 234 1002 263 1047 305 C1005 354 946 377 872 349 C785 316 725 403 638 340 C551 278 489 395 402 339 C321 286 247 384 165 333Z" fill="#020303" opacity="0.82" filter="url(#soft)"/>
+    <path d="M172 319 C247 264 327 352 405 295 C489 234 550 335 636 278 C728 216 789 318 878 267 C950 225 1009 257 1051 295 C1001 319 948 335 878 317 C791 294 728 369 638 323 C549 278 488 367 404 327 C326 289 247 365 172 319Z" fill="none" stroke="#f7bc84" stroke-opacity="0.22" stroke-width="38" filter="url(#glow)"/>
+    <path d="M172 319 C247 264 327 352 405 295 C489 234 550 335 636 278 C728 216 789 318 878 267 C950 225 1009 257 1051 295 C1001 319 948 335 878 317 C791 294 728 369 638 323 C549 278 488 367 404 327 C326 289 247 365 172 319Z" fill="url(#rift)"/>
+    <path d="M186 316 C255 282 329 342 407 305 C490 266 555 342 638 299 C729 251 793 326 881 286 C948 255 999 270 1033 294" fill="none" stroke="#fffdf3" stroke-opacity="0.82" stroke-width="4" filter="url(#glow)"/>
+    <path d="M184 330 C255 307 327 357 405 321 C487 284 551 360 638 317 C729 271 790 344 878 304 C947 273 998 287 1033 302" fill="none" stroke="#7e4c31" stroke-opacity="0.72" stroke-width="3"/>
+  </g>
+  <g fill="#eef1ec">
+    <text x="72" y="92" font-family="Arial, Helvetica, sans-serif" font-size="15" letter-spacing="4.8" opacity="0.62">INTERACTIVE WEBGL STUDY</text>
+    <text x="68" y="520" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700" letter-spacing="-3">LUX RIFT</text>
+    <text x="72" y="562" font-family="Arial, Helvetica, sans-serif" font-size="17" letter-spacing="1.2" opacity="0.68">LIGHT BEHAVES LIKE A PHYSICAL MATERIAL</text>
+  </g>
+  <g transform="translate(965 72)" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="2.2" fill="#f0c497">
+    <circle cx="5" cy="-4" r="4" fill="#f2ad72"/>
+    <text x="20" y="0">DRAG TO OPEN</text>
+  </g>
+</svg>

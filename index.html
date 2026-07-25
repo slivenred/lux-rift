@@ -1,0 +1,99 @@
+<!--
+  Lux Rift
+  Copyright (c) 2026 SlivenRed
+  Released under the MIT License.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#05070a" />
+<meta name="description" content="An interactive WebGL experiment where an elastic obsidian membrane opens into dynamic area light, soft penumbra, and inertial motion." />
+<meta name="author" content="SlivenRed" />
+<meta name="license" content="MIT" />
+<link rel="canonical" href="https://slivenred.github.io/lux-rift/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Lux Rift — Elastic Light Membrane" />
+<meta property="og:description" content="Pull open an elastic obsidian membrane and reveal a living field of light." />
+<meta property="og:url" content="https://slivenred.github.io/lux-rift/" />
+<meta property="og:image" content="https://slivenred.github.io/lux-rift/assets/preview.svg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Lux Rift — Elastic Light Membrane" />
+<meta name="twitter:description" content="An interactive WebGL light experiment with soft penumbra and inertial motion." />
+<meta name="twitter:image" content="https://slivenred.github.io/lux-rift/assets/preview.svg" />
+<title>Lux Rift — Elastic Light Membrane</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="stage" aria-label="Interactive elastic light membrane. Press and drag anywhere to open a luminous rift; release to let the edge oscillate.">
+  <main id="surface">
+    <section class="frame">
+      <header class="topbar">
+        <div class="identity">
+          <div class="mark" aria-hidden="true"></div>
+          <div class="brand">ANEMOI / FIELD OFFICE</div>
+          <div class="subbrand">ATMOSPHERIC MEMORY INDEX</div>
+        </div>
+        <div class="topmeta"><span>STATION 07</span><span>25°02′N</span><span>121°33′E</span></div>
+      </header>
+
+      <article class="hero">
+        <div class="eyebrow">A field atlas of invisible weather</div>
+        <h1>The air<br><em>remembers.</em></h1>
+        <p class="lede">Wind is never an empty passage. It carries pressure, pollen, salt and the thermal trace of every surface it has crossed. This archive records those invisible residues as a living topography.</p>
+        <div class="serial"><span>OBSERVATION / 0719—C</span><span>LOCAL TIME 18:42:16</span><span>ARCHIVE REV. 4.2</span></div>
+      </article>
+
+      <aside class="map" aria-label="Wind field readings">
+        <div class="map-visual">
+          <div class="map-label">FLOW RECONSTRUCTION / LAYER 03</div>
+          <svg class="wind-svg" viewBox="0 0 520 520" aria-hidden="true">
+            <circle class="ring" cx="260" cy="260" r="188"/><circle class="ring" cx="260" cy="260" r="128"/><circle class="ring" cx="260" cy="260" r="68"/>
+            <path class="flow" d="M42 318 C103 198 189 180 252 252 S393 356 478 204"/>
+            <path class="flow" d="M26 248 C104 126 211 129 278 222 S393 318 498 148"/>
+            <path class="flow" d="M55 389 C136 286 200 285 268 332 S390 406 476 294"/>
+            <path class="flow" d="M70 150 C163 63 271 105 312 186 S392 286 486 228"/>
+            <path class="flow accent" d="M12 348 C114 224 206 231 274 286 S407 365 516 222"/>
+            <g class="pulse">
+              <circle class="dot" cx="412" cy="180" r="4"/>
+              <circle class="dot" cx="156" cy="378" r="2.5"/>
+              <circle class="dot" cx="281" cy="88" r="2"/>
+            </g>
+          </svg>
+          <div class="map-index">VECTOR FIELD / 18 MIN COMPOSITE</div>
+        </div>
+        <div class="readings">
+          <div class="reading"><span>GUST</span><strong>08.7</strong><small>M / SEC</small></div>
+          <div class="reading"><span>PRESSURE</span><strong>1007.4</strong><small>HPA</small></div>
+          <div class="reading"><span>DEW POINT</span><strong>14.2°</strong><small>CELSIUS</small></div>
+          <div class="reading"><span>DRIFT</span><strong>127°</strong><small>SOUTH EAST</small></div>
+        </div>
+      </aside>
+
+      <footer class="footer">
+        <div class="footer-left"><span>THE UNSEEN WEATHER / VOLUME II</span><span class="line"></span><span>OPEN DATA / 2026</span></div>
+        <div class="footer-right"><span>01 CURRENT</span><span>02 THERMAL</span><span>03 PARTICULATE</span></div>
+      </footer>
+    </section>
+  </main>
+
+  <canvas id="fx"></canvas>
+  <div id="grain"></div>
+  <div id="badge">LUX RIFT / ELASTIC LIGHT MEMBRANE</div>
+  <div id="gesture"><strong>PRESS + DRAG</strong> TO OPEN THE VEIL<br>RELEASE TO LET THE EDGE OSCILLATE<br><span style="opacity:.62">S SPECTRUM · M MEMBRANE · R RESET</span></div>
+
+  <div id="hud" aria-label="Light membrane controls">
+    <button id="spectrum" type="button" aria-label="Change light spectrum">DAYLIGHT</button>
+    <div class="exposure"><span>EXPOSURE</span><input id="exposure" aria-label="Exposure" type="range" min="70" max="190" value="132" step="1"></div>
+    <button id="material" type="button" aria-label="Change membrane material">OBSIDIAN</button>
+    <button id="reset" type="button" aria-label="Reset the rifts">RESET</button>
+  </div>
+
+  <div id="fallback"><p><strong>WebGL could not be initialized.</strong><br>Open this experiment in a modern browser with WebGL enabled.</p></div>
+</div>
+<script src="shaders.js"></script>
+<script src="app.js"></script>
+  <noscript><div style="position:fixed;inset:0;display:grid;place-items:center;padding:24px;background:#080b0f;color:#e7e0d4;font:14px/1.7 system-ui;text-align:center;z-index:99">Lux Rift requires JavaScript and WebGL.</div></noscript>
+</body>
+</html>

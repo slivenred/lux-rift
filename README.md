@@ -4,7 +4,7 @@
 
 [Live demo](https://slivenred.github.io/lux-rift/) · [繁體中文](README.zh-TW.md)
 
-![Lux Rift preview](assets/preview.webp)
+![Lux Rift preview](assets/preview.svg)
 
 ## Concept
 
@@ -20,8 +20,8 @@ The experience combines a real HTML interface with a transparent WebGL layer. Th
 - Multiple light spectra and membrane materials
 - Responsive desktop and touch interaction
 - Reduced-motion support
-- No frameworks, packages, fonts, images, or runtime network requests
-- A single self-contained `index.html`
+- No runtime frameworks, packages, external fonts, image assets, or network requests
+- Plain HTML, CSS, and JavaScript with no build step
 
 ## Controls
 
@@ -68,10 +68,11 @@ node scripts/validate.mjs
 ```text
 lux-rift/
 ├── index.html
+├── styles.css
+├── shaders.js
+├── app.js
 ├── assets/
-│   ├── demo.webp
-│   ├── mobile.webp
-│   └── preview.webp
+│   └── preview.svg
 ├── .github/workflows/
 │   ├── pages.yml
 │   └── validate.yml
@@ -84,14 +85,14 @@ lux-rift/
 
 ## Customization
 
-The project is intentionally compact. Useful starting points inside `index.html` include:
+The project is intentionally compact. Useful starting points include:
 
-- CSS variables in `:root` for the editorial surface palette
-- `spectrumButton` presets for light color
-- `materialButton` presets for membrane color
-- `uExposure` for light intensity
-- `riftField()` in the fragment shader for edge shape and softness
-- the gesture handlers near the end of the script for motion behavior
+- CSS variables in `styles.css` for the editorial surface palette
+- `spectrumButton` presets in `app.js` for light color
+- `materialButton` presets in `app.js` for membrane color
+- `uExposure` in `app.js` for light intensity
+- `riftField()` in `shaders.js` for edge shape and softness
+- the gesture handlers near the end of `app.js` for motion behavior
 
 ## Browser support
 
