@@ -20,17 +20,25 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
+
+      - name: Prepare static site
+        shell: bash
+        run: |
+          mkdir -p _site/assets
+          cp index.html styles.css shaders.js app.js .nojekyll _site/
+          cp assets/preview.svg _site/assets/preview.svg
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: _site
 
       - name: Deploy
         id: deployment
