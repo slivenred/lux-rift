@@ -2,7 +2,7 @@
 
 **An interactive WebGL experiment where an elastic obsidian membrane opens into dynamic area light, soft penumbra, and inertial motion.**
 
-[Live demo](https://slivenred.github.io/lux-rift/) · [繁體中文](README.zh-TW.md)
+[Open live demo](https://htmlpreview.github.io/?https://github.com/slivenred/lux-rift/blob/main/index.html) · [繁體中文](README.zh-TW.md)
 
 ![Lux Rift preview](assets/preview.svg)
 
