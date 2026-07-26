@@ -2,7 +2,7 @@
 
 **一個互動式 WebGL 光影實驗：拉開具有彈性的黑曜遮光膜，讓大面積光源、柔和半影與慣性運動從裂隙中顯現。**
 
-[線上展示](https://slivenred.github.io/lux-rift/) · [English](README.md)
+[直接開啟 Live Demo](https://htmlpreview.github.io/?https://github.com/slivenred/lux-rift/blob/main/index.html) · [English](README.md)
 
 ![Lux Rift 預覽](assets/preview.svg)
 
