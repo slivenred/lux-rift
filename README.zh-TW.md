@@ -2,9 +2,11 @@
 
 **一個互動式 WebGL 光影實驗：拉開具有彈性的黑曜遮光膜，讓大面積光源、柔和半影與慣性運動從裂隙中顯現。**
 
-[直接開啟 Live Demo](https://htmlpreview.github.io/?https://github.com/slivenred/lux-rift/blob/main/index.html) · [English](README.md)
+[直接開啟 Live Demo](https://htmlpreview.github.io/?https://github.com/slivenred/lux-rift/blob/main/index.html) · [觀看互動影片](assets/lux-rift-interaction-demo.mp4) · [English](README.md)
 
-![Lux Rift 預覽](assets/preview.svg)
+[![Lux Rift 互動效果預覽](assets/preview.svg)](assets/lux-rift-interaction-demo.mp4)
+
+> 點擊上方預覽圖，即可播放直接存放在此儲存庫中的 MP4 互動錄影。
 
 ## 創作概念
 
@@ -61,6 +63,27 @@ python3 -m http.server 8080
 
 ```bash
 node scripts/validate.mjs
+```
+
+## 專案結構
+
+```text
+lux-rift/
+├── index.html
+├── styles.css
+├── shaders.js
+├── app.js
+├── assets/
+│   ├── preview.svg
+│   └── lux-rift-interaction-demo.mp4
+├── .github/workflows/
+│   ├── pages.yml
+│   └── validate.yml
+├── scripts/validate.mjs
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+└── README.zh-TW.md
 ```
 
 ## 自訂方向
