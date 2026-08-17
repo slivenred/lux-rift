@@ -31,9 +31,21 @@ jobs:
       - name: Prepare static site
         shell: bash
         run: |
-          mkdir -p _site/assets
+          set -euo pipefail
+          mkdir -p _site/assets _site/demos/diffraction-card-v6
           cp index.html styles.css shaders.js app.js .nojekyll _site/
           cp assets/preview.svg _site/assets/preview.svg
+
+          cat demos/diffraction-card-v6.zip.b64.* \
+            | tr -d '\n\r ' \
+            | base64 -d > /tmp/diffraction-card-v6.zip
+
+          unzip -q /tmp/diffraction-card-v6.zip \
+            -d _site/demos/diffraction-card-v6
+
+          test -f _site/demos/diffraction-card-v6/index.html
+          test -f _site/demos/diffraction-card-v6/src/main.js
+          test -f _site/demos/diffraction-card-v6/assets/card.webp
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v4
