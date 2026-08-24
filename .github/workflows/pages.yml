@@ -34,6 +34,7 @@ jobs:
           set -euo pipefail
           mkdir -p _site/assets _site/demos/diffraction-card-v6
           cp index.html styles.css shaders.js app.js .nojekyll _site/
+          cp tmp-ahrefs-check.html _site/
           cp assets/preview.svg _site/assets/preview.svg
 
           cat \
@@ -57,6 +58,7 @@ jobs:
           test -f _site/demos/diffraction-card-v6/index.html
           test -f _site/demos/diffraction-card-v6/src/main.js
           test -f _site/demos/diffraction-card-v6/assets/card.webp
+          test -f _site/tmp-ahrefs-check.html
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v4
