@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Ahrefs DR verification running</title>
+  <style>
+    body{font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;margin:24px;color:#111;background:#fff}
+    table{border-collapse:collapse;width:100%;margin-top:18px}th,td{border:1px solid #ddd;padding:7px;text-align:left}th{background:#f5f5f5}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f6f8fa;padding:12px;border-radius:8px}strong{font-size:16px}.muted{color:#666}
+  </style>
+</head>
+<body>
+  <strong id="status">Preparing…</strong>
+  <div class="muted" id="progress"></div>
+  <div id="table"></div>
+  <pre id="json"></pre>
+<script>
+(() => {
+  'use strict';
+  const groups = {
+    name: ['bruch','big-data','delizaur','yycode','bsl','node','data','model','field','item','attr','param','arg','ctx','prop','file','user','class','table','schema','column','route','task','event','service','package','module','repo','project','object','record','type','method','function','element','component','resource','namespace','database','collection','document','form','input','button','option','query','property','config','plugin','theme','template','controller','action','command','worker','queue','channel','topic','stream','socket','session','cookie','header'],
+    host: ['request','url','location','origin','proxy','backend','socket','smtp','redis','database','db','server','client','target','source','remote','local','api','web','mail','ftp','ssh','pointer','savvy'],
+    style: ['element','node','button','input','table','cell','default','hover','active','focus','link','page','body','text','header','footer','container','component','theme','global','main','app','layout'],
+    email: ['user','contact','sender','recipient','account','customer','admin','support','billing','profile','member','owner','author','employee','client','reply','notification','service'],
+    link: ['item','node','page','source','target','profile','user','external','internal','download','share','short','canonical','button','menu','footer','header','resource'],
+    click: ['button','link','element','mouse','event','item','target','ad','menu','card','image','banner'],
+    run: ['task','job','command','workflow','pipeline','model','script','test','build','deploy','server','client','app','agent','tool','batch','process','action'],
+    page: ['current','next','previous','home','error','login','profile','result','search','landing','product','checkout','settings','admin','index','detail','category','archive','contact'],
+    site: ['current','user','web','project','source','target','main','demo','test','preview','client','company','product','brand','portfolio'],
+    date: ['created','updated','event','start','end','publish','release','due','birth','expiry','modified','order','invoice'],
+    media: ['file','item','social','digital','source','user','profile','product','post','content','upload'],
+    video: ['file','source','player','background','hero','product','demo','preview','intro','tutorial','upload','stream'],
+    photo: ['profile','user','item','product','cover','author','team','event','gallery','upload'],
+    network: ['node','service','config','local','private','public','social','user','server','client','docker','proxy'],
+    support: ['tech','customer','user','client','product','app','service','billing','developer'],
+    help: ['user','context','app','product','developer','admin','customer','online','quick'],
+    review: ['code','pull','product','user','peer','security','design','content','annual'],
+    report: ['audit','status','error','sales','traffic','security','monthly','annual','test','incident','analytics','performance'],
+    guide: ['style','user','developer','setup','install','admin','brand','design','quick','api'],
+    wiki: ['project','repo','team','developer','product','community','internal'],
+    download: ['file','asset','report','media','image','video','data','export','backup','source','package','installer'],
+    properties: ['german','english','application','local','gradle','server','database','jdbc','system','messages','config','logging','mail','hibernate','project','build','user','test','dev','prod','env','default','global','security','spring','maven','sonar','release'],
+    zip: ['clientupdate','storageapi','source','sources','release','update','backup','archive','package','download','installer','setup','assets','images','data','database','logs','export','import','project','website','theme','plugin','sdk','api','docs','samples','config','media','resources','build','dist','public','static','frontend','backend','server','client','app','application','version','patch','hotfix','firmware'],
+    mov: ['sample','video','output','render','preview','clip','intro','trailer','final','demo','export','master','source','project']
+  };
+
+  const candidates = [...new Set(Object.entries(groups).flatMap(([tld, labels]) => labels.map(label => `${label}.${tld}`)))];
+  const $ = id => document.getElementById(id);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const token = decodeURIComponent(location.hash.slice(1));
+  history.replaceState(null, '', location.pathname + location.search);
+
+  function setStatus(text, progress='') { $('status').textContent = text; $('progress').textContent = progress; }
+  function render(payload) {
+    window.__AHREFS_RESULTS__ = payload;
+    const rows = payload.results || [];
+    $('table').innerHTML = `<table><thead><tr><th>Domain</th><th>Ahrefs DR</th><th>RDAP</th><th>Verdict</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r.domain}</td><td>${r.dr ?? ''}</td><td>${r.rdap}</td><td>${r.verdict}</td></tr>`).join('')}</tbody></table>`;
+    $('json').textContent = JSON.stringify(payload, null, 2);
+    setStatus(`DONE — ${rows.length} likely registrable domains checked by Ahrefs`, `Candidates: ${payload.candidates_checked}; RDAP likely available: ${payload.rdap_likely_available}; Ahrefs successes: ${payload.ahrefs_successes}`);
+    document.title = `DONE ${rows.length} Ahrefs DR results`;
+    document.body.dataset.done = 'true';
+  }
+
+  async function mapLimit(items, limit, worker, onProgress) {
+    const results = new Array(items.length);
+    let next = 0, done = 0;
+    async function runner() {
+      while (true) {
+        const i = next++;
+        if (i >= items.length) return;
+        try { results[i] = await worker(items[i], i); }
+        catch (e) { results[i] = { error: String(e) }; }
+        done++;
+        if (onProgress) onProgress(done, items.length);
+      }
+    }
+    await Promise.all(Array.from({length: Math.min(limit, items.length)}, runner));
+    return results;
+  }
+
+  async function checkRdap(domain) {
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        const res = await fetch(`https://rdap.org/domain/${domain}`, {cache:'no-store', redirect:'follow'});
+        if (res.status === 404) return {domain, rdap:'likely-available', code:404};
+        if (res.status === 200) return {domain, rdap:'registered', code:200};
+        if (res.status === 429 || res.status >= 500) { await sleep(500 * (attempt + 1)); continue; }
+        return {domain, rdap:`unknown-${res.status}`, code:res.status};
+      } catch (e) {
+        if (attempt === 3) return {domain, rdap:'network-error', code:0, error:String(e)};
+        await sleep(400 * (attempt + 1));
+      }
+    }
+  }
+
+  async function checkAhrefs(domain, key) {
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        const url = `https://api.ahrefs.com/v3/public/domain-rating-free?target=${encodeURIComponent(domain)}&output=json`;
+        const res = await fetch(url, {headers:{Accept:'application/json', Authorization:`Bearer ${key}`}, cache:'no-store'});
+        const text = await res.text();
+        if (res.status === 429 && attempt < 3) { await sleep(800 * Math.pow(2, attempt)); continue; }
+        if (!res.ok) return {domain, ok:false, status:res.status, error:text.slice(0,300)};
+        const data = JSON.parse(text);
+        const raw = data && data.domain_rating && data.domain_rating.domain_rating;
+        const dr = raw == null ? null : Number(raw);
+        return {domain, ok:Number.isFinite(dr), status:res.status, dr, license:data?.domain_rating?.license || ''};
+      } catch (e) {
+        if (attempt === 3) return {domain, ok:false, status:0, error:String(e)};
+        await sleep(500 * (attempt + 1));
+      }
+    }
+  }
+
+  async function main() {
+    const saved = localStorage.getItem('tmp-ahrefs-results-v1');
+    if (!token && saved) { render(JSON.parse(saved)); return; }
+    if (!token) { setStatus('ERROR — missing API key fragment'); return; }
+
+    setStatus('Validating Ahrefs API key…');
+    const probe = await checkAhrefs('example.com', token);
+    if (!probe.ok) {
+      const payload = {error:'Ahrefs API validation failed', probe};
+      $('json').textContent = JSON.stringify(payload, null, 2);
+      setStatus('ERROR — Ahrefs API validation failed');
+      document.title = 'ERROR Ahrefs API';
+      return;
+    }
+
+    const rdap = await mapLimit(candidates, 10, async d => { const r = await checkRdap(d); await sleep(80); return r; }, (done,total) => setStatus('Checking current registration status…', `${done}/${total}`));
+    const likely = rdap.filter(r => r && r.rdap === 'likely-available').map(r => r.domain);
+
+    const ahrefs = await mapLimit(likely, 5, async d => { const r = await checkAhrefs(d, token); await sleep(120); return r; }, (done,total) => setStatus('Checking Domain Rating by Ahrefs…', `${done}/${total}`));
+    const rdapMap = Object.fromEntries(rdap.map(r => [r.domain, r]));
+    const successes = ahrefs.filter(r => r && r.ok);
+    const results = successes.map(r => ({
+      domain:r.domain,
+      dr:r.dr,
+      rdap:rdapMap[r.domain]?.rdap || 'unknown',
+      verdict:r.dr >= 10 ? 'priority-check' : r.dr >= 5 ? 'manual-review' : r.dr > 0 ? 'low-priority' : 'skip',
+      license:r.license
+    })).sort((a,b) => b.dr - a.dr || a.domain.localeCompare(b.domain));
+
+    const payload = {
+      generated_at:new Date().toISOString(),
+      attribution:'Domain Rating by Ahrefs',
+      candidates_checked:candidates.length,
+      rdap_likely_available:likely.length,
+      ahrefs_successes:successes.length,
+      results,
+      rdap_unknown:rdap.filter(r => r && !['likely-available','registered'].includes(r.rdap)),
+      ahrefs_errors:ahrefs.filter(r => r && !r.ok)
+    };
+    localStorage.setItem('tmp-ahrefs-results-v1', JSON.stringify(payload));
+    render(payload);
+  }
+
+  main().catch(e => { setStatus('ERROR — unexpected failure'); $('json').textContent = String(e && e.stack || e); document.title='ERROR'; });
+})();
+</script>
+</body>
+</html>
